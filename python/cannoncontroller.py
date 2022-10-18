@@ -15,7 +15,10 @@ def performCommand(cmd, delay):
 cmdPattern = re.compile("^([a-z]+)( ([0-9]+))?$")
 print(">> Cannon Controller. Use commands up, down, left, right, stop and fire with an optional duration")
 while True:
-	cmdLine = input()
+	try:
+		cmdLine = input()
+	except EOFError:
+		exit(0)
 	match = cmdPattern.match(cmdLine)
 	if match:
 		cmd = match.group(1)
@@ -37,4 +40,4 @@ while True:
 				performCommand(cmd, None)
 			#print("cmd: '" + cmd + "'")
 	else:
-		print("ERROR: Invalid command")
+		print("ERROR: Command is not in up, down, left, right, stop and fire")
