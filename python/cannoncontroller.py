@@ -20,14 +20,14 @@ while True:
 	if match:
 		cmd = match.group(1)
 		if not validateCommandIsKeyword(cmd):
-			print("ERROR: Command is not in up, down, left, right, stop, fire")
+			print("ERROR: Command is not in up, down, left, right, stop and fire")
 		else:
 			durationStr = match.group(3)
 			if durationStr:
-				duration = int(durationStr)
 				if cmd == "fire" or cmd == "stop":
 					print("ERROR: 'fire' and 'stop' does not take arguments")
 				else:
+					duration = int(durationStr)
 					if duration > 10000:
 						print("ERROR: Delay must not be greater than 10000")
 					else:
