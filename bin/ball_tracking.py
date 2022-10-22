@@ -12,7 +12,8 @@ color_dict_HSV = {'black': [(180, 255, 30), (0, 0, 0)],
               'white': [(180, 18, 255), (0, 0, 231)],
               'red1': [(180, 255, 255), (159, 50, 70)],
               'red2': [(9, 255, 255), (0, 50, 70)],
-              'green': [(89, 255, 255), (36, 50, 70)],
+              'green1': [(89, 255, 255), (36, 50, 70)],
+              'green2': [(64, 255, 255), (29, 86, 6)],
               'blue': [(128, 255, 255), (90, 50, 70)],
               'yellow': [(35, 255, 255), (25, 50, 70)],
               'purple': [(158, 255, 255), (129, 50, 70)],
@@ -26,12 +27,11 @@ ap.add_argument("-v", "--video",
 ap.add_argument("-b", "--buffer", type=int, default=64,
 	help="max buffer size")
 args = vars(ap.parse_args())
-# define the lower and upper boundaries of the "green"
+# define the lower and upper boundaries of the
 # ball in the HSV color space, then initialize the
 # list of tracked points
-greenLower = (29, 86, 6)
-greenUpper = (64, 255, 255)
-color = 'green'
+
+color = 'green2'
 greenLower = color_dict_HSV[color][1]
 greenUpper = color_dict_HSV[color][0]
 
