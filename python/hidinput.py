@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
 pygame.init()
@@ -31,7 +33,7 @@ def main():
     keyIsPressed = False
     # Set the width and height of the screen (width, height), and name the window.
     screen = pygame.display.set_mode((500, 700))
-    pygame.display.set_caption("Joystick example")
+    pygame.display.set_caption("Missile Launch Command")
 
     # Used to manage how fast the screen updates.
     clock = pygame.time.Clock()
