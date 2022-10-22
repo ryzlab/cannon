@@ -27,8 +27,8 @@ class TextPrint:
     def unindent(self):
         self.x -= 10
 
-
 def main():
+    keyIsPressed = False
     # Set the width and height of the screen (width, height), and name the window.
     screen = pygame.display.set_mode((500, 700))
     pygame.display.set_caption("Joystick example")
@@ -50,6 +50,26 @@ def main():
         # Possible joystick events: JOYAXISMOTION, JOYBALLMOTION, JOYBUTTONDOWN,
         # JOYBUTTONUP, JOYHATMOTION, JOYDEVICEADDED, JOYDEVICEREMOVED
         for event in pygame.event.get():
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    keyIsPressed = True
+                    print("up")
+                if event.key == pygame.K_DOWN:
+                    keyIsPressed = True
+                    print("down")
+                if event.key == pygame.K_LEFT:
+                    keyIsPressed = True
+                    print("left")
+                if event.key == pygame.K_RIGHT:
+                    keyIsPressed = True
+                    print("right")
+                if event.key == pygame.K_SPACE:
+                    print("fire")
+            if event.type == pygame.KEYUP and keyIsPressed:
+                keyIsPressed = False
+                print("stop")
+
             if event.type == pygame.QUIT:
                 done = True  # Flag that we are done so we exit this loop.
 
