@@ -25,7 +25,7 @@ while True:
 	if match:
 		cmd = match.group(1)
 		if not validateCommandIsKeyword(cmd):
-			print("ERROR: Command is not in up, down, left, right, stop and fire")
+			print("ERROR: Command '" + cmdLine + "' is not in up, down, left, right, stop and fire")
 		else:
 			durationStr = match.group(3)
 			if durationStr:
@@ -42,4 +42,4 @@ while True:
 				performCommand(cmd, None)
 			#print("cmd: '" + cmd + "'")
 	else:
-		print("ERROR: Command is not in up, down, left, right, stop and fire")
+		print("ERROR: Command '" + cmdLine + "' is not in up, down, left, right, stop and fire")
