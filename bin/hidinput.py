@@ -3,6 +3,7 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
+import sys
 
 pygame.init()
 # This is a simple class that will help us print to the screen.
@@ -57,20 +58,26 @@ def main():
                 if event.key == pygame.K_UP:
                     keyIsPressed = True
                     print("up")
+                    sys.stdout.flush()
                 if event.key == pygame.K_DOWN:
                     keyIsPressed = True
                     print("down")
+                    sys.stdout.flush()
                 if event.key == pygame.K_LEFT:
                     keyIsPressed = True
                     print("left")
+                    sys.stdout.flush()
                 if event.key == pygame.K_RIGHT:
                     keyIsPressed = True
                     print("right")
+                    sys.stdout.flush()
                 if event.key == pygame.K_SPACE:
                     print("fire")
+                    sys.stdout.flush()
             if event.type == pygame.KEYUP and keyIsPressed:
                 keyIsPressed = False
                 print("stop")
+                sys.stdout.flush()
 
             if event.type == pygame.QUIT:
                 done = True  # Flag that we are done so we exit this loop.
@@ -78,6 +85,7 @@ def main():
             if event.type == pygame.JOYBUTTONDOWN:
                 # print("Joystick button pressed.")
                 print("fire")
+                sys.stdout.flush()
 
             #if event.type == pygame.JOYBUTTONUP:
             #    print("Joystick button released.")
@@ -136,17 +144,22 @@ def main():
                 if xAxis == 0 and yAxis == 0 and axisDown == True:
                     axisDown = False
                     print("stop")
+                    sys.stdout.flush()
                 if xAxis < -0.5 and not axisDown:
                     print("left")
+                    sys.stdout.flush()
                     axisDown = True
                 if xAxis > 0.5 and not axisDown:
                     print("right")
+                    sys.stdout.flush()
                     axisDown = True
                 if yAxis < -0.5 and not axisDown:
                     print("up")
+                    sys.stdout.flush()
                     axisDown = True
                 if yAxis > 0.5 and not axisDown:
                     print("down")
+                    sys.stdout.flush()
                     axisDown = True
 
             for i in range(axes):
