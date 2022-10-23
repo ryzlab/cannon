@@ -4,11 +4,11 @@ import re
 import time
 
 
-def validateCommandIsKeyword(cmd):
+def validate_command_is_keyword(cmd):
     return cmd in ["up", "down", "left", "right", "stop", "fire"]
 
 
-def performCommand(cmd, delay):
+def perform_command(cmd, delay):
     print("Sending command '" + cmd + "'")
     if delay:
         print(f"sleeping {delay}")
@@ -17,35 +17,35 @@ def performCommand(cmd, delay):
     print("OK")
 
 
-cmdPattern = re.compile("^([a-z]+)( ([0-9]+))?$")
+cmdpattern = re.compile("^([a-z]+)( ([0-9]+))?$")
 print(">> Cannon Controller. Use commands up, down, left, right, stop and fire with an optional duration")
 while True:
     try:
-        cmdLine = input()
+        cmdline = input()
     except EOFError:
         exit(0)
-    if cmdLine.strip().startswith("#"):
+    if cmdline.strip().startswith("#"):
         print("OK")
     else:
-        match = cmdPattern.match(cmdLine)
+        match = cmdpattern.match(cmdline)
         if match:
             cmd = match.group(1)
-            if not validateCommandIsKeyword(cmd):
-                print("ERROR: Command '" + cmdLine + "' is not in up, down, left, right, stop and fire")
+            if not validate_command_is_keyword(cmd):
+                print("ERROR: Command '" + cmdline + "' is not in up, down, left, right, stop and fire")
             else:
-                durationStr = match.group(3)
-                if durationStr:
+                durationstr = match.group(3)
+                if durationstr:
                     if cmd == "fire" or cmd == "stop":
                         print("ERROR: 'fire' and 'stop' does not take arguments")
                     else:
-                        duration = int(durationStr)
+                        duration = int(durationstr)
                         if duration > 10000:
                             print("ERROR: Delay must not be greater than 10000")
                         else:
-                            performCommand(cmd, duration)
+                            perform_command(cmd, duration)
                     # print("cmd: '" + cmd + "', arg: '" + arg + "'")
                 else:
-                    performCommand(cmd, None)
+                    perform_command(cmd, None)
         # print("cmd: '" + cmd + "'")
         else:
-            print("ERROR: Command '" + cmdLine + "' is not in up, down, left, right, stop and fire")
+            print("ERROR: Command '" + cmdline + "' is not in up, down, left, right, stop and fire")

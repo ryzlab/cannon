@@ -34,7 +34,7 @@ class TextPrint:
 
 
 def main():
-    keyIsPressed = False
+    key_is_pressed = False
     # Set the width and height of the screen (width, height), and name the window.
     screen = pygame.display.set_mode((500, 700))
     pygame.display.set_caption("Missile Launch Command")
@@ -49,7 +49,7 @@ def main():
     # pygame.JOYDEVICEADDED event for every joystick connected
     # at the start of the program.
     joysticks = {}
-    axisDown = False
+    axis_down = False
     done = False
     while not done:
         # Event processing step.
@@ -59,26 +59,26 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    keyIsPressed = True
+                    key_is_pressed = True
                     print("up")
                     sys.stdout.flush()
                 if event.key == pygame.K_DOWN:
-                    keyIsPressed = True
+                    key_is_pressed = True
                     print("down")
                     sys.stdout.flush()
                 if event.key == pygame.K_LEFT:
-                    keyIsPressed = True
+                    key_is_pressed = True
                     print("left")
                     sys.stdout.flush()
                 if event.key == pygame.K_RIGHT:
-                    keyIsPressed = True
+                    key_is_pressed = True
                     print("right")
                     sys.stdout.flush()
                 if event.key == pygame.K_SPACE:
                     print("fire")
                     sys.stdout.flush()
-            if event.type == pygame.KEYUP and keyIsPressed:
-                keyIsPressed = False
+            if event.type == pygame.KEYUP and key_is_pressed:
+                key_is_pressed = False
                 print("stop")
                 sys.stdout.flush()
 
@@ -144,26 +144,26 @@ def main():
                 xAxis = joystick.get_axis(0)
                 yAxis = joystick.get_axis(1)
 
-                if xAxis == 0 and yAxis == 0 and axisDown == True:
-                    axisDown = False
+                if xAxis == 0 and yAxis == 0 and axis_down == True:
+                    axis_down = False
                     print("stop")
                     sys.stdout.flush()
-                if xAxis < -0.5 and not axisDown:
+                if xAxis < -0.5 and not axis_down:
                     print("left")
                     sys.stdout.flush()
-                    axisDown = True
-                if xAxis > 0.5 and not axisDown:
+                    axis_down = True
+                if xAxis > 0.5 and not axis_down:
                     print("right")
                     sys.stdout.flush()
-                    axisDown = True
-                if yAxis < -0.5 and not axisDown:
+                    axis_down = True
+                if yAxis < -0.5 and not axis_down:
                     print("up")
                     sys.stdout.flush()
-                    axisDown = True
-                if yAxis > 0.5 and not axisDown:
+                    axis_down = True
+                if yAxis > 0.5 and not axis_down:
                     print("down")
                     sys.stdout.flush()
-                    axisDown = True
+                    axis_down = True
 
             for i in range(axes):
                 axis = joystick.get_axis(i)
