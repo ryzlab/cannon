@@ -8,65 +8,54 @@ import cv2
 import imutils
 import time
 
-color_dict_HSV = {'black': [(180, 255, 30), (0, 0, 0)],
-              'white': [(180, 18, 255), (0, 0, 231)],
-              'red1': [(180, 255, 255), (159, 50, 70)],
-              'red2': [(9, 255, 255), (0, 50, 70)],
-              'green1': [(89, 255, 255), (36, 50, 70)],
-              'green2': [(64, 255, 255), (29, 86, 6)],
-              'blue': [(128, 255, 255), (90, 50, 70)],
-              'yellow': [(35, 255, 255), (25, 50, 70)],
-              'purple': [(158, 255, 255), (129, 50, 70)],
-              'orange': [(24, 255, 255), (10, 50, 70)],
-              'gray': [(180, 18, 230), (0, 0, 40)]}
+color_dict_HSV = {
+    'black': [(180, 255, 30), (0, 0, 0)],
+    'white': [(180, 18, 255), (0, 0, 231)],
+    'red1': [(180, 255, 255), (159, 50, 70)],
+    'red2': [(9, 255, 255), (0, 50, 70)],
+    'green1': [(89, 255, 255), (36, 50, 70)],
+    'green2': [(64, 255, 255), (29, 86, 6)],
+    'blue': [(128, 255, 255), (90, 50, 70)],
+    'yellow': [(35, 255, 255), (25, 50, 70)],
+    'purple': [(158, 255, 255), (129, 50, 70)],
+    'orange': [(24, 255, 255), (10, 50, 70)],
+    'gray': [(180, 18, 230), (0, 0, 40)]
+}
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video",
-	help="path to the (optional) video file")
-ap.add_argument("-b", "--buffer", type=int, default=64,
-	help="max buffer size")
+ap.add_argument("-c", "--color", type=str, default="red", help="Color to track")
 args = vars(ap.parse_args())
+
 # define the lower and upper boundaries of the
 # ball in the HSV color space, then initialize the
 # list of tracked points
-
-color = 'green2'
+color = args['color']
 greenLower = color_dict_HSV[color][1]
 greenUpper = color_dict_HSV[color][0]
 
-pts = deque(maxlen=args["buffer"])
-# if a video path was not supplied, grab the reference
-# to the webcam
-if not args.get("video", False):
-	vs = VideoStream(src=0).start()
-# otherwise, grab a reference to the video file
-else:
-	vs = cv2.VideoCapture(args["video"])
-# allow the camera or video file to warm up
+bufferLength = 64
+pts = deque(maxlen=bufferLength)
+vs = VideoStream(src=0).start()
+# allow the camera to warm up
 time.sleep(2.0)
 # keep looping
 while True:
 	# grab the current frame
 	frame = vs.read()
-	# handle the frame from VideoCapture or VideoStream
-	frame = frame[1] if args.get("video", False) else frame
-	# if we are viewing a video and we did not grab a frame,
-	# then we have reached the end of the video
-	if frame is None:
-		break
+	# handle the frame from VideoCapture
 	# resize the frame, blur it, and convert it to the HSV
 	# color space
 	frame = imutils.resize(frame, width=600)
 	blurred = cv2.GaussianBlur(frame, (21, 21), 0)
 	hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
-	# construct a mask for the color "green", then perform
+	# construct a mask for the color, then perform
 	# a series of dilations and erosions to remove any small
 	# blobs left in the mask
 	mask1 = cv2.inRange(hsv, greenLower, greenUpper)
 	mask2 = cv2.erode(mask1, None, iterations=2)
 	mask3 = cv2.dilate(mask2, None, iterations=2)
-		# find contours in the mask and initialize the current
+	# find contours in the mask and initialize the current
 	# (x, y) center of the ball
 	cnts = cv2.findContours(mask3.copy(), cv2.RETR_EXTERNAL,
 		cv2.CHAIN_APPROX_SIMPLE)
@@ -98,7 +87,7 @@ while True:
 					continue
 				# otherwise, compute the thickness of the line and
 				# draw the connecting lines
-				thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
+				thickness = int(np.sqrt(bufferLength / float(i + 1)) * 2.5)
 				cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 	# show the frame to our screen
 	cv2.imshow("Frame", frame)
@@ -106,11 +95,7 @@ while True:
 	# if the 'q' key is pressed, stop the loop
 	if key == ord("q"):
 		break
-# if we are not using a video file, stop the camera video stream
-if not args.get("video", False):
-	vs.stop()
-# otherwise, release the camera
-else:
-	vs.release()
+
+vs.stop()
 # close all windows
 cv2.destroyAllWindows()
