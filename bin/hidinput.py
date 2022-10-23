@@ -6,6 +6,8 @@ import pygame
 import sys
 
 pygame.init()
+
+
 # This is a simple class that will help us print to the screen.
 # It has nothing to do with the joysticks, just outputting the
 # information.
@@ -29,6 +31,7 @@ class TextPrint:
 
     def unindent(self):
         self.x -= 10
+
 
 def main():
     keyIsPressed = False
@@ -87,7 +90,7 @@ def main():
                 print("fire")
                 sys.stdout.flush()
 
-            #if event.type == pygame.JOYBUTTONUP:
+            # if event.type == pygame.JOYBUTTONUP:
             #    print("Joystick button released.")
 
             # Handle hotplugging
