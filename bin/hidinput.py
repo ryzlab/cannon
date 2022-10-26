@@ -75,6 +75,7 @@ def main():
                     print("right")
                     sys.stdout.flush()
                 if event.key == pygame.K_SPACE:
+                    key_is_pressed = True
                     print("fire")
                     sys.stdout.flush()
             if event.type == pygame.KEYUP and key_is_pressed:
@@ -88,6 +89,11 @@ def main():
             if event.type == pygame.JOYBUTTONDOWN:
                 # print("Joystick button pressed.")
                 print("fire")
+                sys.stdout.flush()
+
+            if event.type == pygame.JOYBUTTONUP:
+                # print("Joystick button pressed.")
+                print("stop")
                 sys.stdout.flush()
 
             # if event.type == pygame.JOYBUTTONUP:
