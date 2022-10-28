@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 hidapi = "*"
+imutils = "*"
+numpy = "*"
+opencv-python = "*"
+pygame = "*"
 
 [dev-packages]
 
