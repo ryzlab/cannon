@@ -1,66 +1,97 @@
 #!/usr/bin/env python3
 
 import re
-import time
 import hid
-
-commands = {
-    'up': 0x01,
-    'down': 0x02,
-    'left': 0x04,
-    'right': 0x08,
-    'fire': 0x10,
-    'stop': 0x20
-}
+import threading as th
 
 
-def validate_command_is_keyword(cmd):
-    return cmd in ["up", "down", "left", "right", "stop", "fire"]
+class CannonController:
+    class Command:
+        def __init__(self, command_name, hid_code, takes_argument):
+            self.command_name = command_name
+            self.hid_code = hid_code
+            self.takes_argument = takes_argument
+
+    UP = Command("up", 0x01, True)
+    DOWN = Command("down", 0x02, True)
+    LEFT = Command("left", 0x04, True)
+    RIGHT = Command("right", 0x08, True)
+    FIRE = Command("fire", 0x10, True)
+    STOP = Command("stop", 0x20, False)
+
+    __commands = {UP, DOWN, LEFT, RIGHT, FIRE, STOP}
+
+    def __init__(self):
+        try:
+            self.hidraw = hid.device(0x1941, 0x8021)
+            self.hidraw.open(0x1941, 0x8021)
+        except OSError:
+            print("No cannon found. Continuing without hardware")
+            self.hidraw = None
+        self.thread = None
+
+    @classmethod
+    def valid_command_name(cls, command_name):
+        for command in cls.__commands:
+            if command.command_name == command_name:
+                return True
+        return False
+
+    @classmethod
+    def name_to_command(cls, command_name):
+        for command in cls.__commands:
+            if command.command_name == command_name:
+                return command
+        raise ValueError("Unknown command name " + command_name)
+
+    def __stop_callback(self):
+        # print("STOPPING")
+        if self.hidraw is not None:
+            self.hidraw.write(CannonController.STOP.hid_code)
+
+    def send_command(self, command, delay=None):
+        # print("Sending command '" + cmd + "'")
+        if self.thread is not None:
+            self.thread.cancel()
+            self.thread = None
+        if self.hidraw is not None:
+            self.hidraw.write(command.hid_code)
+        if delay:
+            self.thread = th.Timer(delay / 1000, self.__stop_callback)
+            self.thread.start()
+        print("OK")
 
 
-def perform_command(hidraw, cmd, delay):
-    print("Sending command '" + cmd + "'")
-    hidraw.write([commands[cmd]])
-    if delay:
-        print(f"sleeping {delay}")
-        time.sleep(delay / 1000)
-        print("Sending 'stop'")
-        hidraw.write([commands['stop']])
-    print("OK")
+cannon_controller = CannonController()
+command_pattern = re.compile("^([a-z]+)( ([0-9]+))?$")
 
-hidraw = hid.device(0x1941, 0x8021)
-hidraw.open(0x1941, 0x8021)
-
-
-cmdpattern = re.compile("^([a-z]+)( ([0-9]+))?$")
 print(">> Cannon Controller. Use commands up, down, left, right, stop and fire with an optional duration")
 while True:
     try:
-        cmdline = input()
+        input_line = input()
     except EOFError:
         exit(0)
-    if cmdline.strip().startswith("#"):
+    if input_line.strip().startswith("#"):
         print("OK")
     else:
-        match = cmdpattern.match(cmdline)
+        match = command_pattern.match(input_line)
         if match:
             cmd = match.group(1)
-            if not validate_command_is_keyword(cmd):
-                print("ERROR: Command '" + cmdline + "' is not in up, down, left, right, stop and fire")
+            if not CannonController.valid_command_name(cmd):
+                print("ERROR: Command '" + input_line + "' is unknown")
             else:
-                durationstr = match.group(3)
-                if durationstr:
-                    if cmd == "fire" or cmd == "stop":
-                        print("ERROR: 'fire' and 'stop' does not take arguments")
+                cannon_command = CannonController.name_to_command(cmd)
+                duration_str = match.group(3)
+                if duration_str:
+                    if not cannon_command.takes_argument:
+                        print("ERROR: Command '" + cannon_command.command_name + "' does not take arguments")
                     else:
-                        duration = int(durationstr)
+                        duration = int(duration_str)
                         if duration > 10000:
                             print("ERROR: Delay must not be greater than 10000")
                         else:
-                            perform_command(hidraw, cmd, duration)
-                    # print("cmd: '" + cmd + "', arg: '" + arg + "'")
+                            cannon_controller.send_command(cmd, duration)
                 else:
-                    perform_command(hidraw, cmd, None)
-        # print("cmd: '" + cmd + "'")
+                    cannon_controller.send_command(cmd, None)
         else:
-            print("ERROR: Command '" + cmdline + "' is not in up, down, left, right, stop and fire")
+            print("ERROR: Command '" + input_line + "' is unknown")
