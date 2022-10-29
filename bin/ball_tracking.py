@@ -24,7 +24,7 @@ color_dict_HSV = {
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--color", type=str, default="red", help="Color to track")
+ap.add_argument("-c", "--color", type=str, default="red1", help="Color to track")
 args = vars(ap.parse_args())
 
 # define the lower and upper boundaries of the
