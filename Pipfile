@@ -9,6 +9,7 @@ imutils = "*"
 numpy = "*"
 opencv-python = "*"
 pygame = "*"
+paho-mqtt = "*"
 
 [dev-packages]
 
