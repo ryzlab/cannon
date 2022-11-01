@@ -59,7 +59,6 @@ class CannonController:
         if delay:
             self.thread = th.Timer(delay / 1000, self.__stop_callback)
             self.thread.start()
-        print("OK")
 
 
 cannon_controller = CannonController()
@@ -68,10 +67,10 @@ command_pattern = re.compile("^([a-z]+)( ([0-9]+))?$")
 print(">> Cannon Controller. Use commands up, down, left, right, stop and fire with an optional duration")
 while True:
     try:
-        input_line = input()
+        input_line = input().strip()
     except EOFError:
         exit(0)
-    if input_line.strip().startswith("#"):
+    if input_line.startswith("#"):
         print("OK")
     else:
         match = command_pattern.match(input_line)
@@ -91,7 +90,9 @@ while True:
                             print("ERROR: Delay must not be greater than 10000")
                         else:
                             cannon_controller.send_command(cmd, duration)
+                            print("OK: " + input_line)
                 else:
                     cannon_controller.send_command(cmd, None)
+                    print("OK: " + input_line)
         else:
             print("ERROR: Command '" + input_line + "' is unknown")
