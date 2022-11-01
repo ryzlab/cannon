@@ -47,7 +47,7 @@ class CannonController:
     def __stop_callback(self):
         # print("STOPPING")
         if self.hidraw is not None:
-            self.hidraw.write(CannonController.STOP.hid_code)
+            self.hidraw.write([CannonController.STOP.hid_code])
 
     def send_command(self, command, delay=None):
         # print("Sending command '" + cmd + "'")
@@ -55,7 +55,7 @@ class CannonController:
             self.thread.cancel()
             self.thread = None
         if self.hidraw is not None:
-            self.hidraw.write(command.hid_code)
+            self.hidraw.write([command.hid_code])
         if delay:
             self.thread = th.Timer(delay / 1000, self.__stop_callback)
             self.thread.start()
@@ -89,10 +89,10 @@ while True:
                         if duration > 10000:
                             print("ERROR: Delay must not be greater than 10000")
                         else:
-                            cannon_controller.send_command(cmd, duration)
+                            cannon_controller.send_command(cannon_command, duration)
                             print("OK: " + input_line)
                 else:
-                    cannon_controller.send_command(cmd, None)
+                    cannon_controller.send_command(cannon_command, None)
                     print("OK: " + input_line)
         else:
             print("ERROR: Command '" + input_line + "' is unknown")
