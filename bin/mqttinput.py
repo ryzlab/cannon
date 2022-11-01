@@ -17,7 +17,7 @@ def on_message(client, userdata, msg):
     try:
         json_message = json.loads(msg.payload)
         if not 'cmd' in json_message or not 'duration' in json_message:
-            sys.stderr.write("Not a valid message: '" + str(msg.payload) + "'\n")
+            sys.stderr.write("Message is missing 'cmd' or 'duration': '" + str(msg.payload) + "'\n")
         else:
             print(json_message['cmd'] + " " + str(json_message['duration']))
             sys.stdout.flush()
