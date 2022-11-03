@@ -62,7 +62,7 @@ class CannonController:
 
 
 cannon_controller = CannonController()
-command_pattern = re.compile("^([a-z]+)( ([0-9]+))?$")
+command_pattern = re.compile("^([a-z]+)( ([0-9]{1,5}))?$")
 
 print(">> Cannon Controller. Use commands up, down, left, right, stop and fire with an optional duration")
 while True:
@@ -72,27 +72,34 @@ while True:
         exit(0)
     if input_line.startswith("#"):
         print("OK")
-    else:
-        match = command_pattern.match(input_line)
-        if match:
-            cmd = match.group(1)
-            if not CannonController.valid_command_name(cmd):
-                print("ERROR: Command '" + input_line + "' is unknown")
-            else:
-                cannon_command = CannonController.name_to_command(cmd)
-                duration_str = match.group(3)
-                if duration_str:
-                    if not cannon_command.takes_argument:
-                        print("ERROR: Command '" + cannon_command.command_name + "' does not take arguments")
-                    else:
-                        duration = int(duration_str)
-                        if duration > 10000:
-                            print("ERROR: Delay must not be greater than 10000")
-                        else:
-                            cannon_controller.send_command(cannon_command, duration)
-                            print("OK: " + input_line)
-                else:
-                    cannon_controller.send_command(cannon_command, None)
-                    print("OK: " + input_line)
-        else:
-            print("ERROR: Command '" + input_line + "' is unknown")
+        continue
+
+    match = command_pattern.match(input_line)
+
+    if not match:
+        print("ERROR: Input '" + input_line + "' is invalid")
+        continue
+
+    cmd = match.group(1)
+    if not CannonController.valid_command_name(cmd):
+        print("ERROR: Command '" + input_line + "' is unknown")
+        continue
+
+    cannon_command = CannonController.name_to_command(cmd)
+    duration_str = match.group(3)
+    if not duration_str:
+        cannon_controller.send_command(cannon_command, None)
+        print("OK: " + input_line)
+        continue
+
+    if not cannon_command.takes_argument:
+        print("ERROR: Command '" + cannon_command.command_name + "' does not take arguments")
+        continue
+
+    duration = int(duration_str)
+    if duration > 10000:
+        print("ERROR: Delay must not be greater than 10000")
+        continue
+
+    cannon_controller.send_command(cannon_command, duration)
+    print("OK: " + input_line)
