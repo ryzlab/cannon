@@ -1,5 +1,5 @@
 # NodeMCU i Arduino IDE
-Installera Arduino IDE från 
+Installera Arduino IDE från [Arduino website](https://www.arduino.cc/en/software)
 
 Gå till Preferences och mata in följande i "Additional boards manager URLs:"
 
