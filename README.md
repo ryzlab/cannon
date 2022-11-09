@@ -8,6 +8,8 @@ Gå sedan till "Boards Manager" och sök efter "nodemcu". Installera.
 
 Nu ska det gå att välja "NodeMCU 1.0 (ESP-12E Module)" när man väljer kort.
 
+[Driver för Mac M1](https://www.silabs.com/Support%20Documents/Software/Mac_OSX_VCP_Driver.zip)
+
 # Fel
 
 ## Request getBoardDetails failed with message: 14 UNAVAILABLE: No connection established
