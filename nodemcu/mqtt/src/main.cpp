@@ -17,7 +17,7 @@ PubSubClient client(espClient);
 
 void setup()
 {
-  pinMode(3, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // Set software serial baud to 115200;
   Serial.begin(115200);
@@ -34,6 +34,9 @@ void setup()
   client.setServer(mqtt_broker, mqtt_port);
   while (!client.connected())
   {
+    if (WiFi.status() != WL_CONNECTED) {
+      ESP.restart();
+    }
     String client_id = "cannon-client-";
     client_id += String(WiFi.macAddress());
     Serial.println("Connecting to mqtt broker.....");
@@ -51,7 +54,23 @@ void setup()
 }
 void loop()
 {
+  if (WiFi.status() != WL_CONNECTED || !client.connected()){
+    ESP.restart();
+  }
+
   client.publish(topic, "{\"cmd\":\"up\",\"duration\":400}");
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
   delay(1000);
 
+  client.publish(topic, "{\"cmd\":\"down\",\"duration\":400}");
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  delay(1000);
+
+  client.publish(topic, "{\"cmd\":\"left\",\"duration\":400}");
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  delay(1000);
+
+  client.publish(topic, "{\"cmd\":\"right\",\"duration\":400}");
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  delay(1000);
 }
