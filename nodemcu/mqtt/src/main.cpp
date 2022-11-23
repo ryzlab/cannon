@@ -17,15 +17,21 @@ PubSubClient client(espClient);
 
 void setup()
 {
+  pinMode(D5, INPUT_PULLUP);
+  pinMode(D1, INPUT_PULLUP);
+  pinMode(D2, INPUT_PULLUP);
+  pinMode(D3, INPUT_PULLUP);
+  pinMode(D6, INPUT_PULLUP);
+
   pinMode(LED_BUILTIN, OUTPUT);
 
-  // Set software serial baud to 115200;
-  Serial.begin(115200);
-  // connecting to a WiFi network
+  Serial.begin(9600);
+  // connect to a WiFi network
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(500);
+    delay(250);
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("Connecting to WiFi..");
   }
   Serial.println("Connected to the WiFi network");
@@ -35,6 +41,7 @@ void setup()
   while (!client.connected())
   {
     if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Disconnected from WiFi while connecting to MQTT Broker. Resetting.");
       ESP.restart();
     }
     String client_id = "cannon-client-";
@@ -54,23 +61,37 @@ void setup()
 }
 void loop()
 {
-  if (WiFi.status() != WL_CONNECTED || !client.connected()){
+  // Keeps connection to MQTT Broker happy
+  client.loop();
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Disconnected from WiFi. Resetting.");
+    ESP.restart();
+  } 
+  if (!client.connected()){
+    Serial.println("Disconnected from MQTT Broker. Resetting.");
     ESP.restart();
   }
 
-  client.publish(topic, "{\"cmd\":\"up\",\"duration\":400}");
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  delay(1000);
-
-  client.publish(topic, "{\"cmd\":\"down\",\"duration\":400}");
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  delay(1000);
-
-  client.publish(topic, "{\"cmd\":\"left\",\"duration\":400}");
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  delay(1000);
-
-  client.publish(topic, "{\"cmd\":\"right\",\"duration\":400}");
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  delay(1000);
+  if (digitalRead(D5) == LOW) {
+    client.publish(topic, "{\"cmd\":\"up\",\"duration\":400}");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    Serial.println("UP");
+  } else if (digitalRead(D1) == LOW) {
+    client.publish(topic, "{\"cmd\":\"down\",\"duration\":400}");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    Serial.println("DOWN");
+  } else if (digitalRead(D2) == LOW) {
+    client.publish(topic, "{\"cmd\":\"left\",\"duration\":400}");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    Serial.println("LEFT");
+  } else if (digitalRead(D3) == LOW) {
+    client.publish(topic, "{\"cmd\":\"right\",\"duration\":400}");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    Serial.println("RIGHT");
+  } else if (digitalRead(D6) == LOW) {
+    client.publish(topic, "{\"cmd\":\"fire\",\"duration\":400}");
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    Serial.println("FIRE");
+  }
 }
