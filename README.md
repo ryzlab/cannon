@@ -13,3 +13,6 @@ Nu ska det gå att välja `NodeMCU 1.0 (ESP-12E Module)` när man väljer kort.
 # USB Driver för Mac M1
 För att prata serieport från IDE:n så måste man ha en drivrutin installerad. Ladda hem och installera.
 [Driver för Mac M1](https://www.silabs.com/Support%20Documents/Software/Mac_OSX_VCP_Driver.zip)
+
+# MQTT för NodeMCU
+Använd PubSubClient av Nick O'Leary
