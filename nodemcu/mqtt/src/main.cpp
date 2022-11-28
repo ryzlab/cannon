@@ -74,23 +74,23 @@ void loop()
   }
 
   if (digitalRead(D5) == LOW) {
-    client.publish(topic, "{\"cmd\":\"up\",\"duration\":400}");
+    client.publish(topic, "{\"cmd\":\"up\",\"duration\":200}");
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("UP");
   } else if (digitalRead(D1) == LOW) {
-    client.publish(topic, "{\"cmd\":\"down\",\"duration\":400}");
+    client.publish(topic, "{\"cmd\":\"down\",\"duration\":200}");
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("DOWN");
   } else if (digitalRead(D2) == LOW) {
-    client.publish(topic, "{\"cmd\":\"left\",\"duration\":400}");
+    client.publish(topic, "{\"cmd\":\"left\",\"duration\":200}");
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("LEFT");
   } else if (digitalRead(D3) == LOW) {
-    client.publish(topic, "{\"cmd\":\"right\",\"duration\":400}");
+    client.publish(topic, "{\"cmd\":\"right\",\"duration\":200}");
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("RIGHT");
   } else if (digitalRead(D6) == LOW) {
-    client.publish(topic, "{\"cmd\":\"fire\",\"duration\":400}");
+    client.publish(topic, "{\"cmd\":\"fire\",\"duration\":200}");
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     Serial.println("FIRE");
   }
