@@ -8,8 +8,8 @@ def on_connect(client, userdata, flags, rc):
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    sys.stderr.write("Subscribing to topic 'cannon/commands'\n")
-    client.subscribe("cannon/commands")
+    sys.stderr.write("Subscribing to topic '" + userdata + "/commands'\n")
+    client.subscribe(userdata + "/commands")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -24,10 +24,16 @@ def on_message(client, userdata, msg):
     except json.decoder.JSONDecodeError:
         sys.stderr.write("Invalid JSON: '" + str(msg.payload) + "'\n")
 
+
+if len(sys.argv) != 2 or (sys.argv[1] != "cannon" and sys.argv[1] != "thunder"):
+    print("Usage: mqttinput.py cannon|thunder")
+    sys.exit(1)
+
+topic = sys.argv[1]
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
-
+client.user_data_set(topic)
 client.connect("localhost", 1883, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and

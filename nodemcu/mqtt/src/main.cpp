@@ -9,11 +9,13 @@ const char *password = WIFI_PASSWORD;
 
 // MQTT Broker
 const char *mqtt_broker = MQTT_BROKER;
-const char *topic = "cannon/commands";
+char cannonTopic[] = "cannon/commands";
+char thunderTopic[] = "thunder/commands";
 const int mqtt_port = 1883;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+char *topic;
 
 void setup()
 {
@@ -22,6 +24,7 @@ void setup()
   pinMode(D2, INPUT_PULLUP);
   pinMode(D3, INPUT_PULLUP);
   pinMode(D6, INPUT_PULLUP);
+  pinMode(D7, INPUT_PULLUP);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -71,6 +74,11 @@ void loop()
   if (!client.connected()){
     Serial.println("Disconnected from MQTT Broker. Resetting.");
     ESP.restart();
+  }
+
+  topic = cannonTopic;
+  if (digitalRead(D7) == LOW) {
+    topic = thunderTopic;
   }
 
   if (digitalRead(D5) == LOW) {
