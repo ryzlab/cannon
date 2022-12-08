@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pipenv run python mqttinput.py thunder | pipenv run python cannoncontroller.py
+pipenv run python mqttinput.py thunder | pipenv run python thundercontroller.py
